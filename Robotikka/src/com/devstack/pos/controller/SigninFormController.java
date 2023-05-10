@@ -1,7 +1,6 @@
 package com.devstack.pos.controller;
 
-import com.devstack.pos.util.JdbcConnection;
-import com.devstack.pos.util.PasswordManager;
+import com.devstack.pos.dao.DatabaseAccessCode;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
@@ -12,9 +11,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SigninFormController {
@@ -24,13 +20,7 @@ public class SigninFormController {
 
     public void btnRegisterNowOnAction(ActionEvent actionEvent) {
         try {
-           Connection connection=JdbcConnection.getConnection();
-            String sql="INSERT INTO user VALUES (?,?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, txtEmail.getText());
-            preparedStatement.setString(2, PasswordManager.encryptPassword(txtPassword.getText()));
-
-            if (preparedStatement.executeUpdate()>0){
+            if (DatabaseAccessCode.createUser(txtEmail.getText(),txtPassword.getText())){
                 new Alert(Alert.AlertType.CONFIRMATION, "User Saved!").show();
             }else{
                 new Alert(Alert.AlertType.WARNING, "Try Again!").show();

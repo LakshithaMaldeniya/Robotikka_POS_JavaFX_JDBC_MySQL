@@ -1,6 +1,7 @@
 package com.devstack.pos.controller;
 
-import com.devstack.pos.util.JdbcConnection;
+import com.devstack.pos.dao.DatabaseAccessCode;
+import com.devstack.pos.dto.UserDto;
 import com.devstack.pos.util.PasswordManager;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -22,17 +23,12 @@ public class LoginFormController {
 
     public void btnSignInOnAction(ActionEvent actionEvent) {
         try {
-            Connection connection= JdbcConnection.getConnection();
-            String sql = "SELECT * FROM user WHERE email=?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, txtEmail.getText());
-
-            ResultSet set = preparedStatement.executeQuery();
-            if (set.next()) {
-                if (PasswordManager.checkPassword(txtPassword.getText(), set.getString("password"))) {
+            UserDto ud= DatabaseAccessCode.findUser(txtEmail.getText());
+            if (null!=ud) {
+                if (PasswordManager.checkPassword(txtPassword.getText(), ud.getPassword())) {
                     System.out.println("Completed");
+                    setUi("DashbordForm");
                 } else {
-                    System.out.println("");
                     new Alert(Alert.AlertType.WARNING, "check your password and try again!").show();
                 }
             } else {
@@ -40,7 +36,7 @@ public class LoginFormController {
             }
 
 
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException | IOException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
         }
