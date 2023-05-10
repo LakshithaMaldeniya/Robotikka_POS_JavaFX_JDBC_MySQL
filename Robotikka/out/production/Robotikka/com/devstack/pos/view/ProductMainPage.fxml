@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="474.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.devstack.pos.controller.ProductMainPageController">
+   <children>
+      <Label layoutX="34.0" layoutY="32.0" text="Coustomer Management">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <JFXButton layoutX="615.0" layoutY="30.0" onAction="#backToHomeOnAction" style="-fx-background-color: #788587;" text="Back to home" />
+      <Separator layoutX="34.0" layoutY="64.0" prefHeight="1.0" prefWidth="635.0" />
+      <AnchorPane layoutX="22.0" layoutY="73.0" prefHeight="388.0" prefWidth="359.0" style="-fx-background-color: #91A3A7;">
+         <children>
+            <JFXButton layoutX="245.0" layoutY="18.0" onAction="#NewCoustomerOnAction" style="-fx-background-color: #007CAC;" text="+ New Product" />
+            <JFXTextField layoutX="14.0" layoutY="14.0" promptText="Product Code" />
+            <TextArea layoutX="13.0" layoutY="61.0" prefHeight="93.0" prefWidth="333.0" promptText="Description">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </TextArea>
+            <JFXButton layoutX="252.0" layoutY="162.0" onAction="#NewCoustomerOnAction" style="-fx-background-color: #007CAC;" text="Save Product" />
+            <TextField layoutX="13.0" layoutY="194.0" prefHeight="25.0" prefWidth="333.0" promptText="Search hear" />
+            <TableView layoutX="14.0" layoutY="228.0" prefHeight="149.0" prefWidth="333.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="#" />
+                <TableColumn prefWidth="108.0" text="Desc" />
+                  <TableColumn prefWidth="84.0" text="Show More" />
+                  <TableColumn prefWidth="65.0" text="Delete" />
+              </columns>
+            </TableView>
+         </children>
+      </AnchorPane>
+      <Separator layoutX="388.0" layoutY="73.0" orientation="VERTICAL" prefHeight="388.0" prefWidth="6.0" />
+      <TextField layoutX="403.0" layoutY="84.0" prefHeight="25.0" prefWidth="175.0" promptText="Selected Product code" />
+      <TextArea layoutX="403.0" layoutY="125.0" prefHeight="93.0" prefWidth="333.0" promptText="Description">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </TextArea>
+      <TableView layoutX="403.0" layoutY="234.0" prefHeight="181.0" prefWidth="333.0">
+         <columns>
+            <TableColumn prefWidth="27.0" text="#" />
+            <TableColumn prefWidth="64.0" text="QTY" />
+            <TableColumn prefWidth="83.0" text="Selling Price" />
+            <TableColumn prefWidth="37.0" text="Byeing Price" />
+            <TableColumn prefWidth="37.0" text="D.AV" />
+            <TableColumn prefWidth="37.0" text="D.AV" />
+         </columns>
+      </TableView>
+   </children>
+</AnchorPane>
