@@ -1,6 +1,13 @@
 package com.devstack.pos.controller;
 
-import com.devstack.pos.dao.DatabaseAccessCode;
+import com.devstack.pos.bo.coustom.BoFactory;
+import com.devstack.pos.bo.coustom.UserBo;
+import com.devstack.pos.dao.customer.DaoFactory;
+import com.devstack.pos.dao.customer.coustom.impl.UserDaoImpl;
+import com.devstack.pos.dto.custom.UserDto;
+import com.devstack.pos.entity.User;
+import com.devstack.pos.enums.BoType;
+import com.devstack.pos.enums.DaoType;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
@@ -18,9 +25,12 @@ public class SigninFormController {
     public JFXPasswordField txtPassword;
     public AnchorPane context;
 
+    UserBo userBo= BoFactory.getInstance().getBo(BoType.USER);
+
     public void btnRegisterNowOnAction(ActionEvent actionEvent) {
         try {
-            if (DatabaseAccessCode.createUser(txtEmail.getText(),txtPassword.getText())){
+            UserDto user=new UserDto(txtEmail.getText(), txtPassword.getText());
+            if (userBo.save(user)){
                 new Alert(Alert.AlertType.CONFIRMATION, "User Saved!").show();
             }else{
                 new Alert(Alert.AlertType.WARNING, "Try Again!").show();

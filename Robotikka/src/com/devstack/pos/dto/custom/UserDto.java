@@ -1,4 +1,4 @@
-package com.devstack.pos.dto;
+package com.devstack.pos.dto.custom;
 
 public class UserDto {
 

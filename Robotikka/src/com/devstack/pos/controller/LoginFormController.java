@@ -1,7 +1,13 @@
 package com.devstack.pos.controller;
 
-import com.devstack.pos.dao.DatabaseAccessCode;
-import com.devstack.pos.dto.UserDto;
+import com.devstack.pos.bo.coustom.BoFactory;
+import com.devstack.pos.bo.coustom.UserBo;
+import com.devstack.pos.dao.customer.DaoFactory;
+import com.devstack.pos.dao.customer.coustom.impl.UserDaoImpl;
+import com.devstack.pos.dto.custom.UserDto;
+import com.devstack.pos.entity.User;
+import com.devstack.pos.enums.BoType;
+import com.devstack.pos.enums.DaoType;
 import com.devstack.pos.util.PasswordManager;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -21,9 +27,11 @@ public class LoginFormController {
     public AnchorPane context;
     public JFXPasswordField txtPassword;
 
+    UserBo userBo= BoFactory.getInstance().getBo(BoType.USER);
+
     public void btnSignInOnAction(ActionEvent actionEvent) {
         try {
-            UserDto ud= DatabaseAccessCode.findUser(txtEmail.getText());
+            UserDto ud= userBo.find(txtEmail.getText());
             if (null!=ud) {
                 if (PasswordManager.checkPassword(txtPassword.getText(), ud.getPassword())) {
                     System.out.println("Completed");

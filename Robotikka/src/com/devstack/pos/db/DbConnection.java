@@ -1,4 +1,4 @@
-package com.devstack.pos.util;
+package com.devstack.pos.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

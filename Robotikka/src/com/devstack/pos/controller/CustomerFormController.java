@@ -1,12 +1,17 @@
 package com.devstack.pos.controller;
 
-import com.devstack.pos.dao.DatabaseAccessCode;
-import com.devstack.pos.dto.CustomerDto;
+import com.devstack.pos.bo.coustom.BoFactory;
+import com.devstack.pos.bo.coustom.CustomerBo;
+import com.devstack.pos.dao.customer.DaoFactory;
+import com.devstack.pos.dao.customer.coustom.impl.CustomerDaoImpl;
+import com.devstack.pos.dto.custom.CustomerDto;
+import com.devstack.pos.entity.Customer;
+import com.devstack.pos.enums.BoType;
+import com.devstack.pos.enums.DaoType;
 import com.devstack.pos.view.tm.CustomerTm;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -18,8 +23,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 public class CustomerFormController {
@@ -39,6 +42,9 @@ public class CustomerFormController {
     public JFXButton btnSaveUpdate;
 
     private String searchText="";
+
+    CustomerBo customerBo= BoFactory.getInstance().getBo(BoType.CUSTOMER);
+
     public void initialize() throws SQLException, ClassNotFoundException {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
@@ -78,15 +84,11 @@ public class CustomerFormController {
     }
 
     public void saveCoustomerOnAction(ActionEvent actionEvent){
+        CustomerDaoImpl customerDao= DaoFactory.getInstance().getDao(DaoType.CUSTOMER);
         try{
-
+            CustomerDto customer=new CustomerDto(txtemail.getText(),txtName.getText(),txtContactNumber.getText(),Double.parseDouble(txtSalary.getText()));
             if (btnSaveUpdate.getText().equals("Save Customer")){
-                if (
-                        DatabaseAccessCode.createCustomer(
-                                txtemail.getText(),txtName.getText(),
-                                txtContactNumber.getText(),Double.parseDouble(txtSalary.getText())
-                        )
-                ){
+                if (customerBo.save(customer)) {
                     new Alert(Alert.AlertType.CONFIRMATION, "Customer Saved!").show();
                     clearFields();
                     loadAllCustomers(txtSearch.getText());
@@ -94,12 +96,7 @@ public class CustomerFormController {
                     new Alert(Alert.AlertType.WARNING, "Try Again!").show();
                 }
             }else{
-                if (
-                        DatabaseAccessCode.updateCustomer(
-                                txtemail.getText(),txtName.getText(),
-                                txtContactNumber.getText(),Double.parseDouble(txtSalary.getText())
-                        )
-                ){
+                if (customerBo.update(customer)){
                     new Alert(Alert.AlertType.CONFIRMATION, "Customer Updated!").show();
                     clearFields();
                     loadAllCustomers(txtSearch.getText());
@@ -136,10 +133,11 @@ public class CustomerFormController {
     private void  loadAllCustomers(String searchText) throws SQLException, ClassNotFoundException {
         ObservableList<CustomerTm> observableList = FXCollections.observableArrayList();
         int counter=1;
-        for (CustomerDto dto:searchText.length()>0?DatabaseAccessCode.searchCustomer(searchText):DatabaseAccessCode.findAllCustomer()){
+
+        for (CustomerDto customer : searchText.length()>0?customerBo.searchCustomer(searchText):customerBo.findAll()){
             Button btn = new Button("Delete");
             CustomerTm tm = new CustomerTm(
-                    counter, dto.getEmail(), dto.getName(), dto.getContact(), dto.getSalary(),
+                    counter, customer.getEmail(), customer.getName(), customer.getContact(), customer.getSalary(),
                     btn
             );
             observableList.add(tm);
@@ -149,8 +147,8 @@ public class CustomerFormController {
                 try{
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure?", ButtonType.YES,ButtonType.NO);
                     Optional<ButtonType> selectedButtonType = alert.showAndWait();
-                    if (selectedButtonType.equals(ButtonType.YES)){
-                        if (DatabaseAccessCode.deleteCustomer(dto.getEmail())){
+                    if (selectedButtonType.get().equals(ButtonType.YES)){
+                        if (customerBo.delete(txtemail.getText())){
                             new Alert(Alert.AlertType.CONFIRMATION, "Customer Deleted!").show();
                             loadAllCustomers(searchText);
                         }else{

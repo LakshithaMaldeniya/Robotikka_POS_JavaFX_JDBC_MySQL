@@ -20,7 +20,7 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <JFXTextField fx:id="txtEmail" labelFloat="true" layoutX="46.0" layoutY="121.0" prefHeight="25.0" prefWidth="289.0" promptText="Email">
+      <JFXTextField fx:id="txtEmail" labelFloat="true" layoutX="46.0" layoutY="121.0" prefHeight="25.0" prefWidth="289.0" promptText="Email" text="maldeniya">
          <font>
             <Font size="13.0" />
          </font>
@@ -46,7 +46,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXButton>
-      <JFXPasswordField fx:id="txtPassword" labelFloat="true" layoutX="45.0" layoutY="175.0" prefHeight="25.0" prefWidth="289.0" promptText="Password">
+      <JFXPasswordField fx:id="txtPassword" labelFloat="true" layoutX="45.0" layoutY="175.0" prefHeight="25.0" prefWidth="289.0" promptText="Password" text="1234">
          <font>
             <Font size="13.0" />
          </font>
