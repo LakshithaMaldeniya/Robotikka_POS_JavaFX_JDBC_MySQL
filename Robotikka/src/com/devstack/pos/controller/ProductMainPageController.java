@@ -2,12 +2,15 @@ package com.devstack.pos.controller;
 
 import com.devstack.pos.bo.coustom.BoFactory;
 import com.devstack.pos.bo.coustom.ProductBo;
+import com.devstack.pos.bo.coustom.ProductDetailsBo;
 import com.devstack.pos.dao.customer.DaoFactory;
 import com.devstack.pos.dao.customer.coustom.impl.ProductDaoImpl;
 import com.devstack.pos.dto.custom.ProductDto;
 import com.devstack.pos.entity.Product;
+import com.devstack.pos.entity.ProductDetails;
 import com.devstack.pos.enums.BoType;
 import com.devstack.pos.enums.DaoType;
+import com.devstack.pos.view.tm.ProductDetailsTm;
 import com.devstack.pos.view.tm.ProductTm;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
@@ -15,6 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -42,7 +46,7 @@ public class ProductMainPageController {
     public TableColumn colDelete;
     public TextField txtProductCode2;
     public TextArea txtDescription2;
-    public TableView tblbatches;
+    public TableView<ProductDetailsTm> tblbatches;
     public TableColumn col2Number;
     public TableColumn col2Qty;
     public TableColumn col2SellingPrice;
@@ -163,6 +167,36 @@ public class ProductMainPageController {
         tblProduct.setItems(obList);
     }
 
+    ProductDetailsBo productDetailsBo=BoFactory.getInstance().getBo(BoType.PRODUCT_DETAIL);
+//    public void loadAllBatches(){
+//        ObservableList<ProductDetailsTm> obList = FXCollections.observableArrayList();
+//        for (ProductDetails product : productDetailsBo.findAll()) {
+//            Button buttondelete = new Button("delete");
+//            ProductDetailsTm tm = new ProductDetailsTm(product.getCode(),product.getBarcode(),product.getQtyOnHand(),product.getSellingPrice(),product.isDiscountAvailability(),product.getShowPrice(),product.getProductCode(),product.getBuyingPrice(),buttondelete);
+//            obList.add(tm);
+//
+//            buttondelete.setOnAction((e) -> {
+//                try {
+//                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure?", ButtonType.YES, ButtonType.NO);
+//                    Optional<ButtonType> selectedButtonType = alert.showAndWait();
+//                    if (selectedButtonType.get().equals(ButtonType.YES)) {
+//                        if (productDetailsBo.delete(txtId.getText())) {
+//                            new Alert(Alert.AlertType.CONFIRMATION, "Product Deleted!").show();
+//                            loadAllProducts(searchText);
+//                        } else {
+//                            new Alert(Alert.AlertType.WARNING, "Try Again!").show();
+//                        }
+//                    }
+//                } catch (SQLException | ClassNotFoundException exception) {
+//                    exception.printStackTrace();
+//                    new Alert(Alert.AlertType.ERROR, exception.getMessage()).show();
+//                }
+//            });
+//
+//        }
+//        tblbatches.setItems(obList);
+//    }
+
     private void clearFields() {
         txtId.clear();
         txtDescription.clear();
@@ -180,6 +214,25 @@ public class ProductMainPageController {
 
     }
 
-    public void newBatchOnAction(ActionEvent actionEvent) {
+    public void newBatchOnAction(ActionEvent actionEvent) throws IOException {
+        setExternalUi();
     }
+
+    private void setExternalUi() throws IOException {
+        if (!txtProductCode2.getText().isEmpty()) {
+            Stage stage = new Stage();
+            FXMLLoader fxmlLoader =
+                    new FXMLLoader(getClass()
+                            .getResource("../view/ NewBatchform.fxml"));
+            Parent parent = fxmlLoader.load();
+            NewBatchformController controller = fxmlLoader.getController();
+            controller.loadInitialData(Integer.parseInt(txtProductCode2.getText()),txtDescription2.getText());
+            stage.setScene(new Scene(parent));
+            stage.show();
+            stage.centerOnScreen();
+        } else {
+            new Alert(Alert.AlertType.WARNING, "Please select a valid one!");
+        }
+    }
+
 }
